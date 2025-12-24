@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sauna Iguana 🦎🔥</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #FFE4E1;
+      text-align: center;
+      padding: 30px;
+    }
+    .box {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px auto;
+      width: 300px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+    }
+    #temp {
+      font-size: 48px;
+      color: #E25822;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>🦎 Sauna Iguana</h1>
+
+  <div class="box">
+    <h2>🌡️ Temperature</h2>
+    <div id="temp">-- °C</div>
+    <button onclick="updateTemp()">Refresh Temp</button>
+  </div>
+
+  <div class="box">
+    <h2>⏱️ Sauna Timer</h2>
+    <input type="number" id="minutes" placeholder="Minutes" min="1">
+    <br>
+    <button onclick="startTimer()">Start</button>
+    <div id="timerDisplay">00:00</div>
+  </div>
+
+  <script>
+    function updateTemp() {
+      const temp = Math.floor(Math.random() * 40) + 60;
+      document.getElementById("temp").textContent = temp + " °C";
+    }
+
+    let timer;
+    function startTimer() {
+      let mins = parseInt(document.getElementById("minutes").value);
+      let totalSeconds = mins * 60;
+
+      clearInterval(timer);
+      timer = setInterval(() => {
+        if (totalSeconds <= 0) {
+          clearInterval(timer);
+          document.getElementById("timerDisplay").textContent = "Done! 🎉";
+          return;
+        }
+        totalSeconds--;
+
+        let m = Math.floor(totalSeconds / 60);
+        let s = totalSeconds % 60;
+
+        document.getElementById("timerDisplay").textContent =
+          `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
