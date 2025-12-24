@@ -4,72 +4,248 @@
   <title>Sauna Iguana 🦎🔥</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #FFE4E1;
+      font-family: 'Comic Sans MS', Arial, sans-serif;
+      background: linear-gradient(to bottom, #FFDAB9, #FFB6C1);
       text-align: center;
       padding: 30px;
+      transition: background 0.5s;
     }
+
+    nav button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      background-color: #FF7F50;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    nav button:hover {
+      background-color: #FF4500;
+      transform: scale(1.1);
+    }
+
+    .page {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .active {
+      display: block;
+    }
+
     .box {
       background: white;
-      border-radius: 12px;
-      padding: 20px;
+      border-radius: 16px;
+      padding: 25px;
       margin: 20px auto;
-      width: 300px;
+      width: 320px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
     }
-    button {
-      padding: 10px 20px;
+
+    .box:hover {
+      transform: scale(1.05);
+    }
+
+    button.action-btn {
+      padding: 10px 25px;
       margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      background-color: #FF7F50;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
     }
-    #temp {
+
+    button.action-btn:hover {
+      background-color: #FF4500;
+      transform: scale(1.1);
+    }
+
+    #tempDisplay, #btTemp {
       font-size: 48px;
+      font-weight: bold;
       color: #E25822;
+      transition: color 0.5s;
+    }
+
+    #iguana {
+      font-size: 48px;
+      display: inline-block;
+      margin-top: 15px;
+      transition: transform 0.3s;
+    }
+
+    #iguana.wave {
+      transform: rotate(20deg) translateY(-10px);
+    }
+
+    #timerDisplay {
+      font-size: 36px;
+      margin-top: 10px;
+      color: #FF6347;
+    }
+
+    h3 {
+      font-size: 28px;
+      margin-bottom: 15px;
+    }
+
+    #history {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #FF4500;
     }
   </style>
 </head>
-
 <body>
   <h1>🦎 Sauna Iguana</h1>
 
-  <div class="box">
-    <h2>🌡️ Temperature</h2>
-    <div id="temp">-- °C</div>
-    <button onclick="updateTemp()">Refresh Temp</button>
+  <nav>
+    <button onclick="showPage('home')">🏠 Home</button>
+    <button onclick="showPage('temp')">🌡️ Temperature</button>
+    <button onclick="showPage('timer')">⏱️ Timer</button>
+    <button onclick="showPage('bluetooth')">🔵 Bluetooth</button>
+  </nav>
+
+  <!-- Home Page -->
+  <div id="home" class="page active">
+    <div class="box">
+      <h3>Welcome to Sauna Iguana!</h3>
+      <p>Track your sauna temperature and timer in a fun, iguana-style way 🦎🔥</p>
+    </div>
   </div>
 
-  <div class="box">
-    <h2>⏱️ Sauna Timer</h2>
-    <input type="number" id="minutes" placeholder="Minutes" min="1">
-    <br>
-    <button onclick="startTimer()">Start</button>
-    <div id="timerDisplay">00:00</div>
+  <!-- Temperature Page -->
+  <div id="temp" class="page">
+    <div class="box">
+      <h3>🌡️ Temperature</h3>
+      <div id="tempDisplay">-- °C</div>
+      <div id="iguana">🦎</div><br>
+      <div id="tempEmoji" style="font-size:32px; margin-top:5px;"></div>
+      <button class="action-btn" onclick="updateTemp()">Refresh Temp</button>
+    </div>
   </div>
+
+  <!-- Timer Page -->
+  <div id="timer" class="page">
+    <div class="box">
+      <h3>⏱️ Sauna Timer</h3>
+      <input type="number" id="minutes" placeholder="Minutes" min="1"><br>
+      <button class="action-btn" onclick="startTimer()">Start</button>
+      <div id="timerDisplay">00:00</div>
+      <div id="history"><b>History:</b><br></div>
+    </div>
+  </div>
+
+  <!-- Bluetooth Page -->
+  <div id="bluetooth" class="page">
+    <div class="box">
+      <h3>🔵 Connect to Sauna Sensor</h3>
+      <p>Once your sauna sensor is paired, this page will show the live temperature.</p>
+      <button class="action-btn" onclick="connectBluetooth()">Connect</button>
+      <div id="btStatus" style="margin-top: 15px; font-size: 20px; color:#FF6347;">Not connected</div>
+      <div id="btTemp">-- °C</div>
+    </div>
+  </div>
+
+  <audio id="ding" src="https://www.soundjay.com/button/beep-07.mp3" preload="auto"></audio>
 
   <script>
-    function updateTemp() {
-      const temp = Math.floor(Math.random() * 40) + 60;
-      document.getElementById("temp").textContent = temp + " °C";
+    // Page navigation
+    function showPage(pageId) {
+      const pages = document.querySelectorAll('.page');
+      pages.forEach(p => p.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
     }
 
+    // Temperature functionality
+    function updateTemp() {
+      const temp = Math.floor(Math.random() * 40) + 60; // 60°C - 99°C
+      const tempEl = document.getElementById("tempDisplay");
+      tempEl.textContent = temp + " °C";
+
+      const tempEmoji = document.getElementById("tempEmoji");
+      if (temp < 70) {
+        tempEl.style.color = "#FFD700";
+        tempEmoji.textContent = "🟡";
+        document.body.style.background = "linear-gradient(to bottom, #FFFACD, #FFE4B5)";
+      }
+      else if (temp < 85) {
+        tempEl.style.color = "#FF8C00";
+        tempEmoji.textContent = "🟠";
+        document.body.style.background = "linear-gradient(to bottom, #FFDAB9, #FFB6C1)";
+      } else {
+        tempEl.style.color = "#FF4500";
+        tempEmoji.textContent = "🔥";
+        document.body.style.background = "linear-gradient(to bottom, #FF6347, #FF4500)";
+      }
+
+      const iguana = document.getElementById("iguana");
+      iguana.classList.add("wave");
+      setTimeout(() => iguana.classList.remove("wave"), 500);
+    }
+
+    // Timer functionality
     let timer;
     function startTimer() {
       let mins = parseInt(document.getElementById("minutes").value);
-      let totalSeconds = mins * 60;
+      if (isNaN(mins) || mins < 1) return alert("Enter a valid number of minutes!");
 
+      let totalSeconds = mins * 60;
       clearInterval(timer);
+
       timer = setInterval(() => {
         if (totalSeconds <= 0) {
           clearInterval(timer);
           document.getElementById("timerDisplay").textContent = "Done! 🎉";
+          document.getElementById("ding").play();
+
+          // Save to history
+          const history = document.getElementById("history");
+          const now = new Date();
+          history.innerHTML += `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')} - ${mins} min<br>`;
           return;
         }
-        totalSeconds--;
 
+        totalSeconds--;
         let m = Math.floor(totalSeconds / 60);
         let s = totalSeconds % 60;
-
         document.getElementById("timerDisplay").textContent =
-          `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+          `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
       }, 1000);
+    }
+
+    // Bluetooth placeholder functionality
+    async function connectBluetooth() {
+      const statusEl = document.getElementById("btStatus");
+      const tempEl = document.getElementById("btTemp");
+
+      statusEl.textContent = "Searching for device...";
+      
+      try {
+        // Placeholder for future BLE device
+        const device = await navigator.bluetooth.requestDevice({
+          filters: [{ services: ['health_thermometer'] }]
+        });
+        statusEl.textContent = `Connected to ${device.name}`;
+        
+        // Simulate live temp updates for now
+        setInterval(() => {
+          const fakeTemp = Math.floor(Math.random() * 40) + 60;
+          tempEl.textContent = fakeTemp + " °C";
+        }, 2000);
+
+      } catch (error) {
+        statusEl.textContent = "Connection failed 😢";
+        console.error(error);
+      }
     }
   </script>
 </body>
