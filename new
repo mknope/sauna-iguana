@@ -1,0 +1,115 @@
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sauna Iguana 🦎🔥</title>
+
+  <style>
+    body {
+      font-family: 'Comic Sans MS', Arial, sans-serif;
+      background: linear-gradient(to bottom, #FFDAB9, #FFB6C1);
+      text-align: center;
+      padding: 5vw;
+      margin: 0;
+      transition: background 0.5s;
+    }
+
+    h1 {
+      font-size: clamp(32px, 5vw, 56px);
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    nav button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 12px;
+      background-color: #FF7F50;
+      color: white;
+      font-size: clamp(16px, 2.5vw, 22px);
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    nav button:hover {
+      background-color: #FF4500;
+      transform: scale(1.08);
+    }
+
+    .page {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .active {
+      display: block;
+    }
+
+    .box {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 600px; /* key for iPad */
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
+    }
+
+    .box:hover {
+      transform: scale(1.03);
+    }
+
+    button.action-btn {
+      padding: 12px 28px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 12px;
+      background-color: #FF7F50;
+      color: white;
+      font-size: clamp(16px, 2.5vw, 22px);
+      cursor: pointer;
+    }
+
+    #tempDisplay, #btTemp {
+      font-size: clamp(40px, 8vw, 70px);
+      font-weight: bold;
+      color: #E25822;
+    }
+
+    #iguana {
+      font-size: clamp(40px, 8vw, 70px);
+      display: inline-block;
+      margin-top: 15px;
+    }
+
+    #timerDisplay {
+      font-size: clamp(32px, 6vw, 56px);
+      margin-top: 10px;
+      color: #FF6347;
+    }
+
+    input {
+      padding: 12px;
+      font-size: 18px;
+      width: 80%;
+      max-width: 300px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+    }
+
+    h3 {
+      font-size: clamp(24px, 4vw, 36px);
+    }
+
+    #history {
+      margin-top: 10px;
+      font-size: clamp(16px, 2.5vw, 22px);
+      color: #FF4500;
+    }
+  </style>
+</head>
